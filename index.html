@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Sem Exam Prep — Lab Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #0d1117;
+    --bg2: #161b22;
+    --bg3: #21262d;
+    --bg4: #30363d;
+    --border: #30363d;
+    --border2: #484f58;
+    --text: #e6edf3;
+    --text2: #8b949e;
+    --text3: #6e7681;
+    --accent: #58a6ff;
+    --accent2: #1f6feb;
+    --green: #3fb950;
+    --orange: #f0883e;
+    --purple: #bc8cff;
+    --red: #ff7b72;
+    --yellow: #e3b341;
+    --is: #2dd4bf;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Inter',sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    min-height:100vh;
+    overflow-x:hidden;
+  }
+
+  /* GRID BG */
+  body::before{
+    content:'';
+    position:fixed;
+    inset:0;
+    background-image:
+      linear-gradient(var(--bg3) 1px,transparent 1px),
+      linear-gradient(90deg,var(--bg3) 1px,transparent 1px);
+    background-size:40px 40px;
+    opacity:0.3;
+    pointer-events:none;
+    z-index:0;
+  }
+
+  /* HEADER */
+  header{
+    position:sticky;top:0;z-index:100;
+    background:rgba(13,17,23,0.85);
+    backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--border);
+    padding:0 24px;
+    display:flex;align-items:center;justify-content:space-between;
+    height:56px;
+  }
+  .logo{
+    font-family:'JetBrains Mono',monospace;
+    font-size:15px;font-weight:700;
+    color:var(--text);
+    display:flex;align-items:center;gap:8px;
+  }
+  .logo span{color:var(--accent);}
+  .logo-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);}
+  .header-right{display:flex;align-items:center;gap:12px;}
+  #admin-btn{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    background:var(--bg3);
+    border:1px solid var(--border);
+    color:var(--text2);
+    padding:6px 14px;border-radius:6px;
+    cursor:pointer;transition:all .2s;
+  }
+  #admin-btn:hover{border-color:var(--accent);color:var(--accent);}
+  #admin-btn.active{background:var(--accent2);border-color:var(--accent);color:#fff;}
+
+  /* HERO */
+  .hero{
+    position:relative;z-index:1;
+    padding:48px 24px 32px;
+    text-align:center;
+  }
+  .hero h1{
+    font-family:'JetBrains Mono',monospace;
+    font-size:clamp(22px,4vw,36px);
+    font-weight:700;
+    line-height:1.2;
+    margin-bottom:10px;
+  }
+  .hero h1 .hi{color:var(--accent);}
+  .hero p{color:var(--text2);font-size:14px;margin-bottom:28px;}
+  .stats{
+    display:flex;justify-content:center;gap:24px;flex-wrap:wrap;
+    margin-bottom:8px;
+  }
+  .stat{
+    background:var(--bg2);border:1px solid var(--border);
+    border-radius:8px;padding:10px 20px;
+    text-align:center;min-width:90px;
+  }
+  .stat-num{
+    font-family:'JetBrains Mono',monospace;
+    font-size:22px;font-weight:700;color:var(--accent);
+  }
+  .stat-label{font-size:11px;color:var(--text3);margin-top:2px;}
+
+  /* TABS */
+  .tabs-wrapper{
+    position:relative;z-index:1;
+    display:flex;justify-content:center;gap:4px;
+    padding:0 24px 0;margin-bottom:24px;
+  }
+  .tab-btn{
+    font-family:'JetBrains Mono',monospace;
+    font-size:13px;font-weight:500;
+    padding:8px 24px;border-radius:6px;
+    border:1px solid var(--border);
+    background:var(--bg2);color:var(--text2);
+    cursor:pointer;transition:all .2s;
+    display:flex;align-items:center;gap:8px;
+  }
+  .tab-btn .dot{width:7px;height:7px;border-radius:50%;}
+  .tab-btn[data-tab="is"] .dot{background:var(--is);}
+  .tab-btn.active[data-tab="is"]{border-color:var(--is);color:var(--is);background:rgba(45,212,191,0.08);}
+
+  /* MAIN */
+  main{position:relative;z-index:1;padding:0 24px 60px;max-width:1100px;margin:0 auto;}
+
+  /* PROGRAM LIST */
+  .program-list{display:flex;flex-direction:column;gap:16px;}
+
+  .program-card{
+    background:var(--bg2);
+    border:1px solid var(--border);
+    border-radius:10px;
+    overflow:hidden;
+    transition:border-color .2s;
+  }
+  .program-card:hover{border-color:var(--border2);}
+
+  .card-header{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:14px 18px;
+    cursor:pointer;
+    user-select:none;
+    gap:12px;
+  }
+  .card-header:hover{background:rgba(255,255,255,0.02);}
+  .card-left{display:flex;align-items:center;gap:12px;flex:1;min-width:0;}
+  .prog-num{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;color:var(--text3);
+    background:var(--bg3);border:1px solid var(--border);
+    border-radius:4px;padding:2px 8px;white-space:nowrap;
+    flex-shrink:0;
+  }
+  .prog-title{
+    font-size:14px;font-weight:500;color:var(--text);
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .card-actions{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+  .chevron{
+    font-size:12px;color:var(--text3);
+    transition:transform .25s;
+    display:inline-block;
+  }
+  .program-card.open .chevron{transform:rotate(90deg);}
+
+  .card-body{
+    display:none;
+    border-top:1px solid var(--border);
+  }
+  .program-card.open .card-body{display:block;}
+
+  /* CODE BLOCK */
+  .code-wrap{position:relative;}
+  .code-lang{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;color:var(--text3);
+    padding:8px 18px 4px;
+    background:var(--bg3);
+    border-bottom:1px solid var(--border);
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  .copy-btn{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;color:var(--text2);
+    background:none;border:1px solid var(--border);
+    border-radius:4px;padding:3px 10px;
+    cursor:pointer;transition:all .15s;
+  }
+  .copy-btn:hover{color:var(--accent);border-color:var(--accent);}
+  pre{
+    background:var(--bg3);
+    padding:16px 18px;
+    overflow-x:auto;
+    font-family:'JetBrains Mono',monospace;
+    font-size:13px;
+    line-height:1.65;
+    color:#e6edf3;
+    white-space:pre;
+  }
+
+  /* OUTPUT */
+  .output-wrap{
+    border-top:1px solid var(--border);
+    padding:12px 18px;
+    background:var(--bg);
+  }
+  .output-label{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;color:var(--green);
+    margin-bottom:8px;display:flex;align-items:center;gap:6px;
+  }
+  .output-label::before{content:'▶';font-size:9px;}
+  .output-text{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;color:var(--text2);
+    line-height:1.7;
+    white-space:pre-wrap;
+  }
+
+  /* OUTPUT IMAGE */
+  .output-img-wrap{
+    border-top:1px solid var(--border);
+    padding:12px 18px;
+    background:var(--bg);
+  }
+  .output-img-wrap img{
+    max-width:min(100%, 600px);
+    width:100%;
+    border-radius:6px;
+    border:1px solid var(--border);
+    display:block;margin-top:8px;
+    cursor:zoom-in;transition:opacity .2s;
+    object-fit:contain;
+  }
+  .output-img-wrap img:hover{opacity:0.9;}
+
+  /* LEX+YACC two-block divider */
+  .lex-yacc-divider{
+    display:flex;align-items:center;gap:10px;
+    padding:6px 18px;background:var(--bg3);
+    border-top:1px solid var(--border);
+    border-bottom:1px solid var(--border);
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;color:var(--purple);
+  }
+
+  /* MULTI-FILE divider (WT / multi-file programs) */
+  .multifile-divider{
+    display:flex;align-items:center;gap:10px;
+    padding:6px 18px;background:var(--bg3);
+    border-top:1px solid var(--border);
+    border-bottom:1px solid var(--border);
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;color:var(--wt);
+  }
+
+  /* IMAGE LIGHTBOX */
+  #lightbox{
+    display:none;position:fixed;inset:0;z-index:999;
+    background:rgba(0,0,0,0.9);
+    align-items:center;justify-content:center;
+    cursor:zoom-out;
+  }
+  #lightbox.open{display:flex;}
+  #lightbox img{max-width:90vw;max-height:90vh;border-radius:8px;}
+
+  /* ADMIN ACTIONS */
+  .admin-actions{
+    display:none;
+    gap:8px;
+  }
+  .admin-actions.visible{display:flex;}
+  .act-btn{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    padding:4px 12px;border-radius:5px;
+    border:1px solid;cursor:pointer;
+    transition:all .15s;background:transparent;
+  }
+  .act-btn.edit{color:var(--yellow);border-color:var(--yellow);}
+  .act-btn.edit:hover{background:rgba(227,179,65,0.1);}
+  .act-btn.delete{color:var(--red);border-color:var(--red);}
+  .act-btn.delete:hover{background:rgba(255,123,114,0.1);}
+
+  /* ADD PROGRAM BTN */
+  #add-program-btn{
+    display:none;
+    font-family:'JetBrains Mono',monospace;
+    font-size:13px;
+    width:100%;padding:14px;
+    background:var(--bg2);
+    border:1px dashed var(--border2);
+    border-radius:10px;
+    color:var(--text2);
+    cursor:pointer;
+    margin-top:16px;
+    transition:all .2s;
+  }
+  #add-program-btn:hover{border-color:var(--accent);color:var(--accent);}
+  #add-program-btn.visible{display:block;}
+
+  /* MODAL */
+  .modal-overlay{
+    display:none;position:fixed;inset:0;z-index:200;
+    background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);
+    align-items:center;justify-content:center;padding:20px;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--bg2);border:1px solid var(--border);
+    border-radius:12px;width:100%;max-width:640px;
+    max-height:90vh;overflow-y:auto;
+    padding:28px;
+  }
+  .modal h2{
+    font-family:'JetBrains Mono',monospace;
+    font-size:16px;margin-bottom:20px;color:var(--text);
+  }
+  .form-group{margin-bottom:16px;}
+  .form-group label{
+    display:block;font-size:12px;color:var(--text2);
+    margin-bottom:6px;font-family:'JetBrains Mono',monospace;
+  }
+  .form-group input,
+  .form-group textarea,
+  .form-group select{
+    width:100%;background:var(--bg3);
+    border:1px solid var(--border);border-radius:6px;
+    color:var(--text);padding:10px 12px;
+    font-family:'JetBrains Mono',monospace;font-size:13px;
+    outline:none;transition:border-color .2s;
+    resize:vertical;
+  }
+  .form-group input:focus,
+  .form-group textarea:focus,
+  .form-group select:focus{border-color:var(--accent);}
+  .form-group textarea{min-height:200px;}
+  .modal-btns{display:flex;gap:10px;justify-content:flex-end;margin-top:20px;}
+  .btn-cancel{
+    font-family:'JetBrains Mono',monospace;font-size:13px;
+    padding:8px 20px;border-radius:6px;
+    background:var(--bg3);border:1px solid var(--border);
+    color:var(--text2);cursor:pointer;transition:all .2s;
+  }
+  .btn-cancel:hover{border-color:var(--border2);color:var(--text);}
+  .btn-save{
+    font-family:'JetBrains Mono',monospace;font-size:13px;
+    padding:8px 20px;border-radius:6px;
+    background:var(--accent2);border:1px solid var(--accent);
+    color:#fff;cursor:pointer;transition:all .2s;
+  }
+  .btn-save:hover{background:var(--accent);}
+  .btn-save:disabled{opacity:0.5;cursor:not-allowed;}
+
+  /* LOGIN MODAL */
+  #login-modal .modal{max-width:420px;}
+  .login-field{position:relative;}
+  .login-field input{padding-right:90px;}
+  .toggle-pass{
+    position:absolute;right:10px;top:50%;transform:translateY(-50%);
+    font-size:11px;color:var(--text3);background:none;border:none;
+    cursor:pointer;font-family:'JetBrains Mono',monospace;
+  }
+  #login-error{
+    font-size:12px;color:var(--red);
+    font-family:'JetBrains Mono',monospace;
+    margin-top:8px;display:none;
+  }
+
+  /* STATUS TOAST */
+  #toast{
+    position:fixed;bottom:24px;right:24px;z-index:500;
+    font-family:'JetBrains Mono',monospace;font-size:12px;
+    padding:10px 18px;border-radius:8px;
+    background:var(--bg3);border:1px solid var(--border);
+    color:var(--text);
+    transform:translateY(20px);opacity:0;
+    transition:all .3s;pointer-events:none;
+  }
+  #toast.show{transform:translateY(0);opacity:1;}
+  #toast.success{border-color:var(--green);color:var(--green);}
+  #toast.error{border-color:var(--red);color:var(--red);}
+
+  /* EMPTY STATE */
+  .empty-state{
+    text-align:center;padding:60px 20px;
+    color:var(--text3);
+    font-family:'JetBrains Mono',monospace;font-size:13px;
+  }
+  .empty-state .big{font-size:32px;margin-bottom:12px;}
+
+  /* LOADING */
+  .loading{
+    text-align:center;padding:40px;
+    font-family:'JetBrains Mono',monospace;font-size:13px;
+    color:var(--text3);
+  }
+  .spinner{
+    display:inline-block;width:20px;height:20px;
+    border:2px solid var(--border);
+    border-top-color:var(--accent);
+    border-radius:50%;
+    animation:spin .7s linear infinite;
+    margin-right:10px;vertical-align:middle;
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  /* SEARCH */
+  .search-wrap{margin-bottom:20px;position:relative;}
+  .search-wrap input{
+    width:100%;background:var(--bg2);
+    border:1px solid var(--border);border-radius:8px;
+    color:var(--text);padding:10px 16px 10px 38px;
+    font-family:'JetBrains Mono',monospace;font-size:13px;
+    outline:none;transition:border-color .2s;
+  }
+  .search-wrap input:focus{border-color:var(--accent);}
+  .search-icon{
+    position:absolute;left:12px;top:50%;transform:translateY(-50%);
+    color:var(--text3);font-size:14px;pointer-events:none;
+  }
+
+  /* ── MULTI-FILE MODAL BLOCKS ─────────────────────────────── */
+  .file-block{
+    background:var(--bg3);
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:14px;
+    margin-bottom:12px;
+    position:relative;
+  }
+  .file-block-header{
+    display:flex;align-items:center;gap:8px;
+    margin-bottom:10px;
+  }
+  .file-block-header input{
+    flex:1;
+    padding:6px 10px;
+    font-size:12px;
+    background:var(--bg);
+    border:1px solid var(--border);
+    border-radius:5px;
+    color:var(--text);
+    font-family:'JetBrains Mono',monospace;
+    outline:none;
+    transition:border-color .2s;
+    resize:none;
+    min-height:unset;
+  }
+  .file-block-header input:focus{border-color:var(--wt);}
+  .file-block textarea{
+    width:100%;
+    min-height:160px;
+    background:var(--bg);
+    border:1px solid var(--border);
+    border-radius:5px;
+    color:var(--text);
+    padding:10px 12px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    outline:none;
+    resize:vertical;
+    transition:border-color .2s;
+  }
+  .file-block textarea:focus{border-color:var(--wt);}
+  .file-block-remove{
+    background:none;
+    border:1px solid var(--border);
+    border-radius:4px;
+    color:var(--red);
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    padding:4px 8px;
+    cursor:pointer;
+    flex-shrink:0;
+    transition:all .15s;
+  }
+  .file-block-remove:hover{background:rgba(255,123,114,0.1);border-color:var(--red);}
+  #add-file-btn{
+    width:100%;
+    padding:10px;
+    background:transparent;
+    border:1px dashed var(--border2);
+    border-radius:6px;
+    color:var(--wt);
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    cursor:pointer;
+    transition:all .2s;
+    margin-bottom:4px;
+  }
+  #add-file-btn:hover{border-color:var(--wt);background:rgba(97,218,251,0.05);}
+  .multifile-section-label{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;color:var(--wt);
+    margin-bottom:8px;
+    display:flex;align-items:center;gap:6px;
+  }
+  .multifile-section-label::before{content:'◈';font-size:10px;}
+
+  @media(max-width:600px){
+    .tabs-wrapper{gap:6px;}
+    .tab-btn{padding:7px 14px;font-size:12px;}
+    .hero h1{font-size:20px;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <span class="logo-dot"></span>
+    <span>//<span> sem-exam-prep</span></span>
+  </div>
+  <div class="header-right">
+    <span id="admin-status" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text3);"></span>
+    <button id="admin-btn" onclick="handleAdminBtn()">⚙ Admin</button>
+  </div>
+</header>
+
+<div class="hero">
+  <h1><span class="hi">lab</span>.programs<span class="hi">()</span></h1>
+  <p>IS (Information Security) · C language · Always ready</p>
+  <div class="stats">
+    <div class="stat"><div class="stat-num" id="stat-is">0</div><div class="stat-label">IS</div></div>
+    <div class="stat"><div class="stat-num" id="stat-total">0</div><div class="stat-label">Total</div></div>
+  </div>
+</div>
+
+<div class="tabs-wrapper">
+  <button class="tab-btn active" data-tab="is" onclick="switchTab('is')"><span class="dot"></span>IS (Info Sec)</button>
+</div>
+
+<main>
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="search-input" placeholder="Search programs..." oninput="renderPrograms()"/>
+  </div>
+  <div id="programs-container"><div class="loading"><span class="spinner"></span>Loading programs...</div></div>
+  <button id="add-program-btn" onclick="openAddModal()">+ Add Program</button>
+</main>
+
+<!-- LOGIN MODAL -->
+<div class="modal-overlay" id="login-modal">
+  <div class="modal">
+    <h2>⚙ Admin Login</h2>
+    <div class="form-group">
+      <label>Password</label>
+      <div class="login-field">
+        <input type="password" id="login-pass" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()"/>
+        <button class="toggle-pass" onclick="togglePassVis()">show</button>
+      </div>
+      <div id="login-error">✗ Wrong password</div>
+    </div>
+    <div class="form-group">
+      <label>GitHub PAT (Personal Access Token)</label>
+      <input type="password" id="login-pat" placeholder="ghp_xxxxxxxxxxxx" onkeydown="if(event.key==='Enter')doLogin()"/>
+    </div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeModal('login-modal')">Cancel</button>
+      <button class="btn-save" onclick="doLogin()">Login</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD/EDIT MODAL -->
+<div class="modal-overlay" id="program-modal">
+  <div class="modal">
+    <h2 id="modal-title">+ Add Program</h2>
+    <div class="form-group">
+      <label>Subject</label>
+      <select id="prog-subject">
+        <option value="is">IS (Information Security)</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Program Number (e.g. 1, 2a, 13)</label>
+      <input type="text" id="prog-num" placeholder="1"/>
+    </div>
+    <div class="form-group">
+      <label>Title</label>
+      <input type="text" id="prog-title" placeholder="Biggest of 3 numbers"/>
+    </div>
+    <div class="form-group">
+      <label>Language — type "Lex+YACC" to enable two code blocks</label>
+      <input type="text" id="prog-lang" placeholder="Java / C / Lex+YACC / HTML+CSS+JS" oninput="toggleLexYacc(this.value)"/>
+    </div>
+    <div class="form-group">
+      <label id="code-label">Code</label>
+      <textarea id="prog-code" placeholder="Paste your code here..."></textarea>
+    </div>
+    <div class="form-group">
+      <label>Expected Output (text)</label>
+      <textarea id="prog-output" style="min-height:100px" placeholder="Paste expected output..."></textarea>
+    </div>
+    <div class="form-group">
+      <label>Output Screenshot (optional)</label>
+      <input type="file" id="prog-img" accept="image/*" onchange="handleImgUpload(this)" style="color:var(--text2);font-size:12px;"/>
+      <div id="img-preview-wrap" style="margin-top:8px;display:none;">
+        <img id="img-preview" src="" style="max-width:100%;max-height:200px;border-radius:6px;border:1px solid var(--border);"/>
+        <button onclick="clearImg()" style="display:block;margin-top:6px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--red);background:none;border:none;cursor:pointer;">✕ Remove image</button>
+      </div>
+    </div>
+
+    <!-- LEX+YACC second block (unchanged) -->
+    <div class="form-group" id="lex2-group" style="display:none;">
+      <label>YACC Code (.y file)</label>
+      <textarea id="prog-code2" style="min-height:200px" placeholder="Paste YACC (.y) code here..."></textarea>
+    </div>
+
+    <!-- ── MULTI-FILE SECTION (new) ─────────────────────── -->
+    <div id="multifile-section" style="display:none;">
+      <div class="multifile-section-label">Additional Files</div>
+      <div id="file-blocks-container"></div>
+      <button id="add-file-btn" onclick="addFileBlock()">+ Add File</button>
+    </div>
+
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeModal('program-modal')">Cancel</button>
+      <button class="btn-save" id="save-btn" onclick="saveProgram()">Save</button>
+    </div>
+  </div>
+</div>
+
+<div id="lightbox" onclick="this.classList.remove('open')"><img id="lightbox-img" src="" alt="output"/></div>
+<div id="toast"></div>
+
+<script>
+// ── CONFIG ──────────────────────────────────────────────────────────────────
+const GITHUB_USER  = 'AtsushiakaRaju';
+const GITHUB_REPO  = 'exam-prep';
+const DATA_FILE    = 'programs.json';
+const BRANCH       = 'main';
+const PASS_HASH    = '134563d4e440f0e418b0f382f23a2cf301af6d7f648ccfae9895018345d779a3';
+
+// ── STATE ────────────────────────────────────────────────────────────────────
+let programs   = [];
+let isAdmin    = false;
+let pat        = '';
+let currentTab = 'is';
+let editingId  = null;
+let fileSHA    = '';
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', fetchPrograms);
+
+async function fetchPrograms() {
+  document.getElementById('programs-container').innerHTML =
+    '<div class="loading"><span class="spinner"></span>Loading programs...</div>';
+  try {
+    const rawUrl = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${BRANCH}/${DATA_FILE}?t=${Date.now()}`;
+    const res = await fetch(rawUrl);
+    if(res.status === 404){
+      programs = []; fileSHA = '';
+    } else {
+      programs = await res.json();
+      const apiUrl = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${DATA_FILE}?ref=${BRANCH}`;
+      const headers = {'Accept':'application/vnd.github.v3+json'};
+      if(pat) headers['Authorization'] = `token ${pat}`;
+      const metaRes = await fetch(apiUrl, {headers});
+      if(metaRes.ok){ const meta = await metaRes.json(); fileSHA = meta.sha||''; }
+    }
+  } catch(e){ programs = []; }
+  updateStats();
+  renderPrograms();
+}
+
+// ── RENDER ────────────────────────────────────────────────────────────────────
+function renderPrograms(){
+  const query = (document.getElementById('search-input').value||'').toLowerCase();
+  const filtered = programs.filter(p => {
+    const matchTab = p.subject === currentTab;
+    const matchSearch = !query ||
+      p.title.toLowerCase().includes(query) ||
+      p.num.toString().includes(query) ||
+      (p.code||'').toLowerCase().includes(query) ||
+      (p.files||[]).some(f => (f.code||'').toLowerCase().includes(query) || (f.name||'').toLowerCase().includes(query));
+    return matchTab && matchSearch;
+  });
+
+  const container = document.getElementById('programs-container');
+  if(!filtered.length){
+    container.innerHTML = '<div class="empty-state"><div class="big">📭</div>No programs yet.<br/>'+(isAdmin?'Click "+ Add Program" to get started.':'Ask admin to add programs.')+'</div>';
+    return;
+  }
+  container.innerHTML = filtered.map(p => buildCard(p)).join('');
+  document.querySelectorAll('.admin-actions').forEach(el=>{
+    el.classList.toggle('visible', isAdmin);
+  });
+}
+
+function buildCard(p){
+  const isLexYacc = (p.lang||'').toLowerCase().includes('lex');
+  const hasExtraFiles = Array.isArray(p.files) && p.files.length > 0;
+
+  // ── Code block(s) ─────────────────────────────────────────
+  let codeHtml = '';
+
+  if(isLexYacc && p.code2){
+    // Original Lex+YACC two-block — untouched
+    codeHtml = `
+      <div class="code-wrap">
+        <div class="code-lang">
+          <span>${escapeHtml(p.lang||'Code')} — .l file (Lex)</span>
+          <button class="copy-btn" onclick="copyCode('${p.id}','lex')">copy</button>
+        </div>
+        <pre>${escapeHtml(p.code||'')}</pre>
+      </div>
+      <div class="lex-yacc-divider">▼ YACC file (.y)</div>
+      <div class="code-wrap">
+        <div class="code-lang">
+          <span>${escapeHtml(p.lang||'Code')} — .y file (YACC)</span>
+          <button class="copy-btn" onclick="copyCode('${p.id}','yacc')">copy</button>
+        </div>
+        <pre>${escapeHtml(p.code2||'')}</pre>
+      </div>`;
+  } else {
+    // Primary code block
+    codeHtml = `
+      <div class="code-wrap">
+        <div class="code-lang">
+          <span>${escapeHtml(p.lang||'Code')}</span>
+          <button class="copy-btn" onclick="copyCode('${p.id}')">copy</button>
+        </div>
+        <pre>${escapeHtml(p.code||'')}</pre>
+      </div>`;
+
+    // Additional files (multi-file system)
+    if(hasExtraFiles){
+      p.files.forEach((f, i) => {
+        codeHtml += `
+          <div class="multifile-divider">▼ ${escapeHtml(f.name||'File '+(i+2))}</div>
+          <div class="code-wrap">
+            <div class="code-lang">
+              <span>${escapeHtml(f.name||'File '+(i+2))}</span>
+              <button class="copy-btn" onclick="copyFileCode('${p.id}',${i})">copy</button>
+            </div>
+            <pre>${escapeHtml(f.code||'')}</pre>
+          </div>`;
+      });
+    }
+  }
+
+  const outputHtml = p.output ? `
+    <div class="output-wrap">
+      <div class="output-label">Output</div>
+      <div class="output-text">${escapeHtml(p.output)}</div>
+    </div>` : '';
+
+  const imgHtml = p.outputImg ? `
+    <div class="output-img-wrap">
+      <div class="output-label">Output Screenshot</div>
+      <img src="${p.outputImg}" alt="output screenshot" onclick="openLightbox('${p.id}')"/>
+    </div>` : '';
+
+  return `
+  <div class="program-card" id="card-${p.id}">
+    <div class="card-header" onclick="toggleCard('${p.id}')">
+      <div class="card-left">
+        <span class="prog-num">#${p.num}</span>
+        <span class="prog-title">${escapeHtml(p.title)}</span>
+      </div>
+      <div class="card-actions">
+        <div class="admin-actions ${isAdmin?'visible':''}">
+          <button class="act-btn edit" onclick="event.stopPropagation();openEditModal('${p.id}')">✏ Edit</button>
+          <button class="act-btn delete" onclick="event.stopPropagation();deleteProgram('${p.id}')">✕ Del</button>
+        </div>
+        <span class="chevron">▶</span>
+      </div>
+    </div>
+    <div class="card-body">
+      ${codeHtml}
+      ${outputHtml}
+      ${imgHtml}
+    </div>
+  </div>`;
+}
+
+function toggleCard(id){
+  document.getElementById('card-'+id).classList.toggle('open');
+}
+
+function updateStats(){
+  const count = s => programs.filter(p=>p.subject===s).length;
+  document.getElementById('stat-is').textContent   = count('is');
+  document.getElementById('stat-total').textContent = programs.length;
+}
+
+// ── TABS ──────────────────────────────────────────────────────────────────────
+function switchTab(tab){
+  currentTab = tab;
+  document.querySelectorAll('.tab-btn').forEach(b=>{
+    b.classList.toggle('active', b.dataset.tab === tab);
+  });
+  document.getElementById('search-input').value='';
+  renderPrograms();
+}
+
+// ── AUTH ──────────────────────────────────────────────────────────────────────
+function handleAdminBtn(){
+  if(isAdmin){ logout(); } else { openModal('login-modal'); }
+}
+
+async function sha256(msg){
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(msg));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+async function doLogin(){
+  const pass = document.getElementById('login-pass').value;
+  const inputPAT = document.getElementById('login-pat').value.trim();
+  const hash = await sha256(pass);
+  if(hash !== PASS_HASH){
+    document.getElementById('login-error').style.display='block'; return;
+  }
+  if(!inputPAT){ showToast('PAT is required','error'); return; }
+  pat = inputPAT; isAdmin = true;
+  closeModal('login-modal');
+  document.getElementById('admin-btn').classList.add('active');
+  document.getElementById('admin-btn').textContent = '⚙ Logout';
+  document.getElementById('admin-status').textContent = '● admin';
+  document.getElementById('add-program-btn').classList.add('visible');
+  document.getElementById('login-pass').value='';
+  document.getElementById('login-pat').value='';
+  document.getElementById('login-error').style.display='none';
+  await fetchPrograms();
+  showToast('Logged in ✓','success');
+}
+
+function logout(){
+  isAdmin = false; pat = '';
+  document.getElementById('admin-btn').classList.remove('active');
+  document.getElementById('admin-btn').textContent = '⚙ Admin';
+  document.getElementById('admin-status').textContent='';
+  document.getElementById('add-program-btn').classList.remove('visible');
+  renderPrograms();
+  showToast('Logged out','success');
+}
+
+function togglePassVis(){
+  const inp = document.getElementById('login-pass');
+  const btn = inp.nextElementSibling;
+  if(inp.type==='password'){ inp.type='text'; btn.textContent='hide'; }
+  else { inp.type='password'; btn.textContent='show'; }
+}
+
+// ── MULTI-FILE MODAL LOGIC ────────────────────────────────────────────────────
+// Each file block: { name, code } stored in DOM, read on save
+let fileBlockCount = 0;
+
+function addFileBlock(name='', code=''){
+  fileBlockCount++;
+  const id = 'fb_' + fileBlockCount;
+  const container = document.getElementById('file-blocks-container');
+  const div = document.createElement('div');
+  div.className = 'file-block';
+  div.id = id;
+  div.innerHTML = `
+    <div class="file-block-header">
+      <input type="text" placeholder="filename (e.g. style.css, LoginServlet.java)" value="${escapeHtml(name)}" data-role="fname"/>
+      <button class="file-block-remove" onclick="removeFileBlock('${id}')">✕ Remove</button>
+    </div>
+    <textarea data-role="fcode" placeholder="Paste file code here...">${escapeHtml(code)}</textarea>`;
+  container.appendChild(div);
+}
+
+function removeFileBlock(id){
+  const el = document.getElementById(id);
+  if(el) el.remove();
+}
+
+function getFileBlocksData(){
+  const blocks = document.querySelectorAll('#file-blocks-container .file-block');
+  const files = [];
+  blocks.forEach(b => {
+    const name = b.querySelector('[data-role="fname"]').value.trim();
+    const code = b.querySelector('[data-role="fcode"]').value;
+    if(name || code) files.push({name, code});
+  });
+  return files;
+}
+
+function clearFileBlocks(){
+  document.getElementById('file-blocks-container').innerHTML = '';
+  fileBlockCount = 0;
+}
+
+function showMultifileSection(show){
+  document.getElementById('multifile-section').style.display = show ? 'block' : 'none';
+}
+
+// ── CRUD ──────────────────────────────────────────────────────────────────────
+function openAddModal(){
+  editingId = null;
+  document.getElementById('modal-title').textContent = '+ Add Program';
+  document.getElementById('prog-subject').value = currentTab;
+  document.getElementById('prog-num').value    = '';
+  document.getElementById('prog-title').value  = '';
+  document.getElementById('prog-lang').value   = '';
+  document.getElementById('prog-code').value   = '';
+  document.getElementById('prog-code2').value  = '';
+  document.getElementById('prog-output').value = '';
+  document.getElementById('prog-img').value    = '';
+  document.getElementById('img-preview-wrap').style.display='none';
+  document.getElementById('lex2-group').style.display='none';
+  document.getElementById('code-label').textContent='Code';
+  currentImgBase64 = '';
+  clearFileBlocks();
+  showMultifileSection(true);  // always visible for non-Lex programs
+  openModal('program-modal');
+}
+
+function openEditModal(id){
+  const p = programs.find(x=>x.id===id);
+  if(!p) return;
+  editingId = id;
+  document.getElementById('modal-title').textContent = '✏ Edit Program';
+  document.getElementById('prog-subject').value = p.subject;
+  document.getElementById('prog-num').value    = p.num;
+  document.getElementById('prog-title').value  = p.title;
+  document.getElementById('prog-lang').value   = p.lang||'';
+  document.getElementById('prog-code').value   = p.code||'';
+  document.getElementById('prog-code2').value  = p.code2||'';
+  document.getElementById('prog-output').value = p.output||'';
+  document.getElementById('prog-img').value    = '';
+  currentImgBase64 = p.outputImg||'';
+  toggleLexYacc(p.lang||'');
+  if(currentImgBase64){
+    document.getElementById('img-preview').src = currentImgBase64;
+    document.getElementById('img-preview-wrap').style.display='block';
+  } else {
+    document.getElementById('img-preview-wrap').style.display='none';
+  }
+  // Restore extra files
+  clearFileBlocks();
+  const isLex = (p.lang||'').toLowerCase().includes('lex');
+  showMultifileSection(!isLex);
+  if(!isLex && Array.isArray(p.files)){
+    p.files.forEach(f => addFileBlock(f.name, f.code));
+  }
+  openModal('program-modal');
+}
+
+async function saveProgram(){
+  const btn = document.getElementById('save-btn');
+  const subject   = document.getElementById('prog-subject').value;
+  const num       = document.getElementById('prog-num').value.trim();
+  const title     = document.getElementById('prog-title').value.trim();
+  const lang      = document.getElementById('prog-lang').value.trim();
+  const code      = document.getElementById('prog-code').value;
+  const code2     = document.getElementById('prog-code2').value;
+  const output    = document.getElementById('prog-output').value;
+  const outputImg = currentImgBase64;
+  const isLex     = lang.toLowerCase().includes('lex');
+  const files     = isLex ? [] : getFileBlocksData();
+
+  if(!num||!title||!code){ showToast('Fill in num, title & code','error'); return; }
+
+  btn.disabled = true; btn.textContent = 'Saving...';
+
+  if(editingId){
+    const idx = programs.findIndex(x=>x.id===editingId);
+    programs[idx] = {...programs[idx], subject, num, title, lang, code, code2, output, outputImg, files};
+  } else {
+    programs.push({
+      id: 'p_' + Date.now(),
+      subject, num, title, lang, code, code2, output, outputImg, files,
+      created: new Date().toISOString()
+    });
+  }
+
+  const ok = await pushToGithub();
+  btn.disabled = false; btn.textContent = 'Save';
+  if(ok){
+    closeModal('program-modal');
+    updateStats();
+    renderPrograms();
+    showToast(editingId ? 'Program updated ✓' : 'Program added ✓','success');
+  } else {
+    await fetchPrograms();
+  }
+}
+
+async function deleteProgram(id){
+  if(!confirm('Delete this program?')) return;
+  programs = programs.filter(p=>p.id!==id);
+  const ok = await pushToGithub();
+  if(ok){ updateStats(); renderPrograms(); showToast('Deleted ✓','success'); }
+  else { await fetchPrograms(); }
+}
+
+async function pushToGithub(){
+  try {
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(programs, null, 2))));
+    const body = { message:`update: programs.json [${new Date().toISOString()}]`, content, branch:BRANCH };
+    if(fileSHA) body.sha = fileSHA;
+    const res = await fetch(
+      `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${DATA_FILE}`,
+      { method:'PUT', headers:{'Authorization':`token ${pat}`,'Content-Type':'application/json','Accept':'application/vnd.github.v3+json'}, body:JSON.stringify(body) }
+    );
+    const data = await res.json();
+    if(!res.ok){ showToast('GitHub error: '+(data.message||'unknown'),'error'); return false; }
+    fileSHA = data.content?.sha || fileSHA;
+    return true;
+  } catch(e){ showToast('Network error','error'); return false; }
+}
+
+// ── COPY ──────────────────────────────────────────────────────────────────────
+function copyCode(id, which){
+  const p = programs.find(x=>x.id===id);
+  if(!p) return;
+  const text = (which==='yacc') ? (p.code2||'') : (p.code||'');
+  navigator.clipboard.writeText(text).then(()=>showToast('Copied!','success'));
+}
+
+function copyFileCode(id, fileIndex){
+  const p = programs.find(x=>x.id===id);
+  if(!p || !p.files || !p.files[fileIndex]) return;
+  navigator.clipboard.writeText(p.files[fileIndex].code||'').then(()=>showToast('Copied!','success'));
+}
+
+// ── IMAGE HELPERS ─────────────────────────────────────────────────────────────
+let currentImgBase64 = '';
+
+function handleImgUpload(input){
+  const file = input.files[0];
+  if(!file) return;
+  if(file.size > 2*1024*1024){ showToast('Image too large (max 2MB)','error'); return; }
+  const reader = new FileReader();
+  reader.onload = e => {
+    currentImgBase64 = e.target.result;
+    document.getElementById('img-preview').src = currentImgBase64;
+    document.getElementById('img-preview-wrap').style.display='block';
+  };
+  reader.readAsDataURL(file);
+}
+
+function clearImg(){
+  currentImgBase64='';
+  document.getElementById('prog-img').value='';
+  document.getElementById('img-preview-wrap').style.display='none';
+}
+
+function openLightbox(id){
+  const p = programs.find(x=>x.id===id);
+  if(!p||!p.outputImg) return;
+  document.getElementById('lightbox-img').src = p.outputImg;
+  document.getElementById('lightbox').classList.add('open');
+}
+
+// ── LEX+YACC TOGGLE ───────────────────────────────────────────────────────────
+function toggleLexYacc(lang){
+  const isLex = lang.toLowerCase().includes('lex');
+  document.getElementById('lex2-group').style.display = isLex ? 'block' : 'none';
+  document.getElementById('code-label').textContent = isLex ? 'Lex Code (.l file)' : 'Code';
+  // Hide multi-file section when Lex+YACC mode is active (they are mutually exclusive)
+  showMultifileSection(!isLex);
+}
+
+// ── MODAL HELPERS ─────────────────────────────────────────────────────────────
+function openModal(id){ document.getElementById(id).classList.add('open'); }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(m=>{
+  m.addEventListener('click', e=>{ if(e.target===m) m.classList.remove('open'); });
+});
+
+// ── TOAST ─────────────────────────────────────────────────────────────────────
+let toastTimer;
+function showToast(msg, type='success'){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'show '+(type||'');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>{ t.className=''; }, 2800);
+}
+
+// ── UTILS ─────────────────────────────────────────────────────────────────────
+function escapeHtml(s){
+  return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+</script>
+</body>
+</html>
