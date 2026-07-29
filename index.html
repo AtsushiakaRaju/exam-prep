@@ -1000,6 +1000,16 @@ async function deleteProgram(id){
 
 async function pushToGithub(){
   try {
+    // Always fetch the latest SHA before pushing
+    const shaUrl = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${DATA_FILE}?ref=${BRANCH}`;
+    const shaRes = await fetch(shaUrl, {
+      headers: {'Authorization':`token ${pat}`, 'Accept':'application/vnd.github.v3+json'}
+    });
+    if(shaRes.ok){
+      const meta = await shaRes.json();
+      fileSHA = meta.sha || '';
+    }
+
     const content = btoa(unescape(encodeURIComponent(JSON.stringify(programs, null, 2))));
     const body = { message:`update: programs.json [${new Date().toISOString()}]`, content, branch:BRANCH };
     if(fileSHA) body.sha = fileSHA;
