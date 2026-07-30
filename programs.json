@@ -37,5 +37,18 @@
     "outputImg": "",
     "files": [],
     "created": "2026-07-30T12:27:14.830Z"
+  },
+  {
+    "id": "p_1785414528597",
+    "subject": "is",
+    "num": "3b",
+    "title": "Substitution Cipher",
+    "lang": "C",
+    "code": "#include <ctype.h>\n#include <stdio.h>\n#include <string.h>\n\nvoid encrypt(char *plaintext, int shift) {\n  for (int i = 0; i < strlen(plaintext); i++) {\n    if (isalpha(plaintext[i])) {\n      char base = isupper(plaintext[i]) ? 'A' : 'a';\n      plaintext[i] = ((plaintext[i] - base + shift) % 26) + base;\n    }\n  }\n}\n\nvoid decrypt(char *ciphertext, int shift) {\n  for (int i = 0; i < strlen(ciphertext); i++) {\n    if (isalpha(ciphertext[i])) {\n      char base = isupper(ciphertext[i]) ? 'A' : 'a';\n      ciphertext[i] = ((ciphertext[i] - base - shift + 26) % 26) + base;\n    }\n  }\n}\n\nint main() {\n  char text[100];\n  int shift, choice;\n\n  printf(\"Enter the text: \");\n  fgets(text, sizeof(text), stdin);\n  text[strcspn(text, \"\\n\")] = 0;\n\n  printf(\"Enter the shift value: \");\n  scanf(\"%d\", &shift);\n\n  printf(\"1. Encrypt\\n2. Decrypt\\n\");\n  printf(\"Enter your choice: \");\n  scanf(\"%d\", &choice);\n\n  if (choice == 1) {\n    encrypt(text, shift);\n    printf(\"Encrypted text: %s\\n\", text);\n  } else if (choice == 2) {\n    decrypt(text, shift);\n    printf(\"Decrypted text: %s\\n\", text);\n  } else {\n    printf(\"Invalid choice\\n\");\n  }\n\n  return 0;\n}",
+    "code2": "",
+    "output": "Enter the text: USA\nEnter the shift value: 3\n1. Encrypt\n2. Decrypt\nEnter your choice: 1\nEncrypted text: XVD",
+    "outputImg": "",
+    "files": [],
+    "created": "2026-07-30T12:28:48.597Z"
   }
 ]
