@@ -24,5 +24,18 @@
     "outputImg": "",
     "files": [],
     "created": "2026-07-30T12:25:35.980Z"
+  },
+  {
+    "id": "p_1785414434830",
+    "subject": "is",
+    "num": "3a",
+    "title": "Caesar Cipher",
+    "lang": "C",
+    "code": "#include <ctype.h>\n#include <stdio.h>\n#include <string.h>\n\nvoid encrypt(char *str, int shift) {\n  for (int i = 0; i < strlen(str); i++) {\n    if (isalpha(str[i])) {\n      char base = isupper(str[i]) ? 'A' : 'a';\n      str[i] = (str[i] - base + shift) % 26 + base;\n    }\n  }\n}\n\nvoid decrypt(char *str, int shift) {\n  for (int i = 0; i < strlen(str); i++) {\n    if (isalpha(str[i])) {\n      char base = isupper(str[i]) ? 'A' : 'a';\n      str[i] = (str[i] - base - shift + 26) % 26 + base;\n    }\n  }\n}\n\nint main() {\n  char str[100];\n  int shift;\n\n  printf(\"Enter a string: \");\n  fgets(str, sizeof(str), stdin);\n  str[strcspn(str, \"\\n\")] = '\\0';\n\n  printf(\"Enter shift value: \");\n  scanf(\"%d\", &shift);\n\n  printf(\"Original string: %s\\n\", str);\n\n  encrypt(str, shift);\n  printf(\"Encrypted string: %s\\n\", str);\n\n  decrypt(str, shift);\n  printf(\"Decrypted string: %s\\n\", str);\n\n  return 0;\n}",
+    "code2": "",
+    "output": "Enter a string: Hello\nEnter shift value: 8\nOriginal string: Hello\nEncrypted string: Pmttw\nDecrypted string: Hello",
+    "outputImg": "",
+    "files": [],
+    "created": "2026-07-30T12:27:14.830Z"
   }
 ]
