@@ -1,1 +1,15 @@
-[]
+[
+  {
+    "id": "p_1785414229964",
+    "subject": "is",
+    "num": "1",
+    "title": "(XOR with 0)",
+    "lang": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\nint main() {\n  char str[] = \"Hello world\";\n\n  printf(\"Original string: %s\\n\", str);\n\n  for (int i = 0; i < strlen(str); i++) {\n    str[i] = str[i] ^ 0;\n  }\n\n  printf(\"After XOR with 0: %s\\n\", str);\n  return 0;\n}",
+    "code2": "",
+    "output": "Original string: Hello world\nAfter XOR with 0: Hello world",
+    "outputImg": "",
+    "files": [],
+    "created": "2026-07-30T12:23:49.964Z"
+  }
+]
