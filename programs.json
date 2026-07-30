@@ -11,5 +11,18 @@
     "outputImg": "",
     "files": [],
     "created": "2026-07-30T12:23:49.964Z"
+  },
+  {
+    "id": "p_1785414335980",
+    "subject": "is",
+    "num": "2",
+    "title": "XOR and AND with 127",
+    "lang": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\nint main() {\n  char plaintext[] = \"Hello world\";\n  char ciphertext[20];\n  int i;\n\n  printf(\"Original string: %s\\n\", plaintext);\n\n  // XOR each character with 127\n  for (i = 0; i < strlen(plaintext); i++) {\n    ciphertext[i] = plaintext[i] ^ 127;\n  }\n  ciphertext[i] = '\\0';\n  printf(\"After XOR with 127: %s\\n\", ciphertext);\n\n  // AND each character with 127\n  for (i = 0; i < strlen(plaintext); i++) {\n    ciphertext[i] = plaintext[i] & 127;\n  }\n  ciphertext[i] = '\\0';\n  printf(\"After AND with 127: %s\\n\", ciphertext);\n\n  return 0;\n}",
+    "code2": "",
+    "output": "Original string: Hello world\nAfter XOR with 127: 7_\nfter AND with 127: Hello world",
+    "outputImg": "",
+    "files": [],
+    "created": "2026-07-30T12:25:35.980Z"
   }
 ]
