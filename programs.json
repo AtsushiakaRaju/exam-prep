@@ -89,5 +89,18 @@
     "outputImg": "",
     "files": [],
     "created": "2026-07-30T12:44:34.297Z"
+  },
+  {
+    "id": "p_1790844558012",
+    "subject": "is",
+    "num": "6",
+    "title": "Rijndael algorithm logic",
+    "lang": "C",
+    "code": "#include <stdio.h>\n#include <gcrypt.h>\n\nint main() {\n    gcry_cipher_hd_t h;\n    char key[] = \"0123456789abcdef\";      // 16 bytes = AES-128\n    char buf[16] = \"Hello, World!\";       // rest is auto zero-padded to 16\n\n    gcry_check_version(NULL);             // initialise libgcrypt\n    gcry_cipher_open(&h, GCRY_CIPHER_AES128, GCRY_CIPHER_MODE_ECB, 0);\n    gcry_cipher_setkey(h, key, 16);\n\n    gcry_cipher_encrypt(h, buf, 16, NULL, 0);   // NULL, 0 = encrypt in place\n    printf(\"Encrypted: \");\n    for (int i = 0; i < 16; i++) printf(\"%02x\", (unsigned char)buf[i]);\n\n    gcry_cipher_decrypt(h, buf, 16, NULL, 0);   // decrypt in place\n    printf(\"\\nDecrypted: %s\\n\", buf);\n\n    gcry_cipher_close(h);\n    return 0;\n}\n\nExecution Steps, If any problem occurs:\n\n// sudo apt update\n// sudo apt install libgcrypt20-dev\n// gcc 6.c -o 6 -lgcrypt\n// ./6",
+    "code2": "",
+    "output": "Encrypted: 67b2eba307a374a72d5d33411c37b083\nDecrypted: Hello, World!",
+    "outputImg": "",
+    "files": [],
+    "created": "2026-10-01T08:49:18.012Z"
   }
 ]
