@@ -115,5 +115,18 @@
     "outputImg": "",
     "files": [],
     "created": "2026-10-01T08:51:38.375Z"
+  },
+  {
+    "id": "p_1790844995660",
+    "subject": "is",
+    "num": "8",
+    "title": "RSA algorithm",
+    "lang": "C",
+    "code": "#include <stdio.h>\n\n// (base^exp) % mod, done step by step so numbers never overflow\nlong long power(long long base, long long exp, long long mod) {\n    long long result = 1;\n    while (exp > 0) {\n        if (exp % 2 == 1) result = (result * base) % mod;\n        base = (base * base) % mod;\n        exp = exp / 2;\n    }\n    return result;\n}\n\nint main() {\n    long long p = 61, q = 53;           // two primes\n    long long n = p * q;                // 3233\n    long long phi = (p - 1) * (q - 1);  // 3120\n    long long e = 17, d = 1;            // e must be coprime with phi\n\n    while ((e * d) % phi != 1) d++;     // find d: e*d = 1 (mod phi)\n\n    long long msg = 12;\n    long long enc = power(msg, e, n);\n    long long dec = power(enc, d, n);\n\n    printf(\"Public Key : (%lld, %lld)\\n\", e, n);\n    printf(\"Private Key: (%lld, %lld)\\n\", d, n);\n    printf(\"Original   : %lld\\n\", msg);\n    printf(\"Encrypted  : %lld\\n\", enc);\n    printf(\"Decrypted  : %lld\\n\", dec);\n    return 0;\n}",
+    "code2": "",
+    "output": "Public Key : (17, 3233)\nPrivate Key: (2753, 3233)\nOriginal   : 12\nEncrypted  : 1730\nDecrypted  : 12",
+    "outputImg": "",
+    "files": [],
+    "created": "2026-10-01T08:56:35.660Z"
   }
 ]
