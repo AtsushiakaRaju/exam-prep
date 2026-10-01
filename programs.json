@@ -102,5 +102,18 @@
     "outputImg": "",
     "files": [],
     "created": "2026-10-01T08:49:18.012Z"
+  },
+  {
+    "id": "p_1790844698375",
+    "subject": "is",
+    "num": "7",
+    "title": "RC4 logic",
+    "lang": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\nunsigned char S[256];\n\nvoid rc4_init(unsigned char *key, int klen) {\n    int i, j = 0;\n    unsigned char t;\n    for (i = 0; i < 256; i++) S[i] = i;                 // 1. fill S with 0..255\n    for (i = 0; i < 256; i++) {                         // 2. shuffle using the key\n        j = (j + S[i] + key[i % klen]) % 256;\n        t = S[i]; S[i] = S[j]; S[j] = t;\n    }\n}\n\nvoid rc4_crypt(unsigned char *data, int len) {\n    int i = 0, j = 0, n;\n    unsigned char t;\n    for (n = 0; n < len; n++) {                         // 3. generate keystream, XOR\n        i = (i + 1) % 256;\n        j = (j + S[i]) % 256;\n        t = S[i]; S[i] = S[j]; S[j] = t;\n        data[n] ^= S[(S[i] + S[j]) % 256];\n    }\n}\n\nint main() {\n    unsigned char key[] = \"secretkey\";\n    unsigned char text[] = \"Hello World\";\n    int klen = strlen((char *)key), len = strlen((char *)text);\n\n    printf(\"Plaintext : %s\\n\", text);\n\n    rc4_init(key, klen);\n    rc4_crypt(text, len);\n    printf(\"Ciphertext: \");\n    for (int i = 0; i < len; i++) printf(\"%02x\", text[i]);\n\n    rc4_init(key, klen);          // reset the state, then the same function decrypts\n    rc4_crypt(text, len);\n    printf(\"\\nDecrypted : %s\\n\", text);\n    return 0;\n}",
+    "code2": "",
+    "output": "Plaintext : Hello World\nCiphertext: edcdb0702391c2275ac02f\nDecrypted : Hello World",
+    "outputImg": "",
+    "files": [],
+    "created": "2026-10-01T08:51:38.375Z"
   }
 ]
